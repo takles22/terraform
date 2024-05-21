@@ -1,0 +1,8 @@
+# create configuration for the maunually created instance
+resource "aws_instance" "manually_instance" {
+  ami           = "ami-01c647eace872fc02"
+  instance_type = "t2.micro"
+}
+
+######### Commands #######: 
+# terraform import aws_instance.manually_instance i-xxxxxxxx # >>>> provide the instance ID of your manullay created instance.
