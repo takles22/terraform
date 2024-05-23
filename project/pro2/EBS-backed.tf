@@ -31,7 +31,7 @@ resource "aws_key_pair" "dopper" {
 resource "aws_instance" "Web_Server1" {
   ami           = data.aws_ami.amaz23.id
   instance_type = "t2.micro"
-  subnet_id = aws_subnet.Private_Subnet1.id
+  subnet_id = aws_subnet.Public_Subnet1.id
   ephemeral_block_device {
     device_name = "/dev/sdb"
     virtual_name = "ephemeral0"
@@ -40,14 +40,7 @@ resource "aws_instance" "Web_Server1" {
   aws_security_group.WebSG.id
   ]
   key_name      = "memo"
-  user_data = <<EOF
-        #!bin/bash,
-        sudo yum update -y
-        yum install httpd -y # installs apache (httpd) service
-        systemctl start httpd # starts httpd service
-        systemctl enable httpd # enable httpd to auto-start at system boot
-        echo " This is server *1* in AWS Region US-EAST-1 in AZ US-EAST-1A " > /var/www/html/index.html
-        EOF
+  user_data = "${file("apache1.sh")}"
   connection {
     type     = "ssh"
     user     = "ec2-user"
@@ -55,10 +48,8 @@ resource "aws_instance" "Web_Server1" {
     host     = self.public_ip 
   }
 
-  provisioner "remote-exec" {
-      inline = [
-        "curl http://instancepublicip"
-    ]
+  provisioner  "local-exec"  {
+      command = "curl http://instancepublicip"
   }
   tags = {
     Name = "Web_Server1"
@@ -71,7 +62,7 @@ resource "aws_instance" "Web_Server1" {
 resource "aws_instance" "Web_Server2" {
   ami           = data.aws_ami.amaz23.id
   instance_type = "t2.micro"
-  subnet_id = aws_subnet.Private_Subnet2.id
+  subnet_id = aws_subnet.Public_Subnet2
   ephemeral_block_device {
     device_name = "/dev/sdb"
     virtual_name = "ephemeral0"
@@ -80,24 +71,15 @@ resource "aws_instance" "Web_Server2" {
   aws_security_group.WebSG.id
   ]
   key_name      = "memo"
-  user_data = <<EOF
-        #!bin/bash,
-        sudo yum update -y
-        yum install httpd -y # installs apache (httpd) service
-        systemctl start httpd # starts httpd service
-        systemctl enable httpd # enable httpd to auto-start at system boot
-        echo " This is server *2* in AWS Region US-EAST-1 in AZ US-EAST-1B " > /var/www/html/index.html
-        EOF
+  user_data = "${file("apache2.sh")}"
   connection {
     type     = "ssh"
     user     = "ec2-user"
     private_key = file("~/.ssh/memo")
     host     = self.public_ip 
   }
-  provisioner "remote-exec" {
-      inline = [
-        "curl http://instancepublicip"
-    ]
+  provisioner  "local-exec"  {
+      command = "curl http://instancepublicip"
   }
 
   tags = {

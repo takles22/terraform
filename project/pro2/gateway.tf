@@ -6,11 +6,6 @@ resource "aws_internet_gateway" "IGW" {
     Name = "IGW"
   }
 }
-# attachec IGW to VPC
-resource "aws_internet_gateway_attachment" "IGW" {
-  internet_gateway_id = aws_internet_gateway.IGW.id
-  vpc_id              = aws_vpc.custom_VPC.id
-}
 
 #---------------------------------------------------------#
 

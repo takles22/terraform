@@ -38,7 +38,7 @@ resource "aws_vpc_security_group_egress_rule" "allow_HTTP2_traffic_ipv4" {
 resource "aws_security_group" "ALBSG" {
   name        = "ALBSG"
   description = "Allow HTTP inbound traffic and all outbound traffic"
-  vpc_id      = aws_vpc.terra_VPC.id
+  vpc_id      = aws_vpc.custom_VPC.id
 
   tags = {
     Name = "ALBSG"
