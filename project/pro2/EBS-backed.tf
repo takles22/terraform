@@ -49,7 +49,7 @@ resource "aws_instance" "Web_Server1" {
   }
 
   provisioner  "local-exec"  {
-      command = "curl http://instancepublicip"
+      command = "echo http://${self.public_ip }"
   }
   tags = {
     Name = "Web_Server1"
@@ -62,7 +62,7 @@ resource "aws_instance" "Web_Server1" {
 resource "aws_instance" "Web_Server2" {
   ami           = data.aws_ami.amaz23.id
   instance_type = "t2.micro"
-  subnet_id = aws_subnet.Public_Subnet2
+  subnet_id = aws_subnet.Public_Subnet2.id
   ephemeral_block_device {
     device_name = "/dev/sdb"
     virtual_name = "ephemeral0"
@@ -79,7 +79,7 @@ resource "aws_instance" "Web_Server2" {
     host     = self.public_ip 
   }
   provisioner  "local-exec"  {
-      command = "curl http://instancepublicip"
+      command = "echo http://${self.public_ip }"
   }
 
   tags = {
@@ -91,12 +91,12 @@ resource "aws_instance" "Web_Server2" {
 
 #shown Public IPS
 output "pub1_ip" {
-    value = aws_instance.web_Server1.public_ip
+    value = aws_instance.Web_Server1.public_ip
   
 }
 
 output "pub2_ip" {
-    value = aws_instance.web_Server2.public_ip
+    value = aws_instance.Web_Server1.public_ip
   
 }
 

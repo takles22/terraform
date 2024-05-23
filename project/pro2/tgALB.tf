@@ -23,21 +23,31 @@ resource "aws_lb" "WebALB" {
     load_balancer_type = "application"
     enable_cross_zone_load_balancing = "true"
     security_groups    = [aws_security_group.ALBSG.id]
-    subnets            = [aws_subnet.Public_Subnet1, aws_subnet.Public_Subnet2]
+    subnets            = [aws_subnet.Public_Subnet1.id, aws_subnet.Public_Subnet2.id]
 }
 
 #------------------------------------------------#
 # register targets to target_group
-resource "aws_lb_target_group_attachment" "test" {
+resource "aws_lb_target_group_attachment" "test1" {
   target_group_arn = aws_lb_target_group.WebTG.arn
-  target_id = aws_instance.ebs.id
+  target_id = aws_instance.Web_Server1.id
   port             = 80
 }
+
+#------------------------------------------------#
+
+# register targets to target_group
+resource "aws_lb_target_group_attachment" "test2" {
+  target_group_arn = aws_lb_target_group.WebTG.arn
+  target_id = aws_instance.Web_Server2.id
+  port             = 80
+}
+
 #------------------------------------------------#
 
 # Add lislener to ALB
 resource "aws_lb_listener" "front_end" {
-  load_balancer_arn = aws_lb.front_end.arn
+  load_balancer_arn = aws_lb.WebALB.arn
   port              = "80"
   protocol          = "HTTP"
   

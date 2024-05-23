@@ -40,7 +40,7 @@ resource "aws_nat_gateway" "NATGW1" {
 
 # Create NAT gateway 2
 resource "aws_nat_gateway" "NATGW2" {
-  allocation_id = aws_eip.lb2.id
+  allocation_id = aws_eip.EIP2.id
   subnet_id     = aws_subnet.Public_Subnet2.id
 
   tags = {

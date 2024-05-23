@@ -15,7 +15,7 @@ resource "aws_route_table" "Public_RT" {
 #------------------------------------------------#
 
 # Assoisate Public table to public1 subnet
-resource "aws_route_table_association" "Public1_2" {
+resource "aws_route_table_association" "Public1" {
   subnet_id      = aws_subnet.Public_Subnet1.id
   route_table_id = aws_route_table.Public_RT.id
 }
@@ -23,10 +23,12 @@ resource "aws_route_table_association" "Public1_2" {
 #------------------------------------------------#
 
 # Assoisate Public table to public2 subnet
-resource "aws_route_table_association" "Public1_2" {
+resource "aws_route_table_association" "Public2" {
   subnet_id      = aws_subnet.Public_Subnet2.id
   route_table_id = aws_route_table.Public_RT.id
 }
+
+
 
 #------------------------------------------------#
 
