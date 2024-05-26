@@ -1,61 +1,23 @@
-resource "aws_launch_template" "foo" {
-  name = "foo"
+resource "aws_launch_template" "server1_temp" {
+  name = "server1_temp"
 
   block_device_mappings {
-    device_name = "/dev/sdf"
+    device_name = "/dev/sdh"
 
     ebs {
-      volume_size = 20
+      volume_size = 10
     }
   }
 
-  capacity_reservation_specification {
-    capacity_reservation_preference = "open"
-  }
+  image_id      = data.aws_ami.amaz23.id
+  instance_type = "t2.micro"
 
-  cpu_options {
-    core_count       = 4
-    threads_per_core = 2
-  }
-
-  credit_specification {
-    cpu_credits = "standard"
-  }
-
-  disable_api_stop        = true
-  disable_api_termination = true
-
-  ebs_optimized = true
-
-  elastic_gpu_specifications {
-    type = "test"
-  }
-
-  elastic_inference_accelerator {
-    type = "eia1.medium"
-  }
-
-  iam_instance_profile {
-    name = "test"
-  }
-
-  image_id = data.aws_ami.amaz23.id
+  default_version = 1
 
   instance_initiated_shutdown_behavior = "terminate"
 
-  instance_market_options {
-    market_type = "spot"
-  }
 
-  instance_type = "t2.micro"
-
-  kernel_id = "test"
-
-  key_name = "memo"
-
-  license_specification {
-    license_configuration_arn = "arn:aws:license-manager:eu-west-1:123456789012:license-configuration:lic-0123456789abcdef0123456789abcdef"
-  }
+  key_name = aws_key_pair.dopper.key_name
 
   metadata_options {
     http_endpoint               = "enabled"
@@ -69,24 +31,26 @@ resource "aws_launch_template" "foo" {
   }
 
   network_interfaces {
+    security_groups = [aws_security_group.WebSG.id]
     associate_public_ip_address = true
-  }
+    subnet_id                   = aws_subnet.Public_Subnet1.id
+    delete_on_termination       = true 
+}
 
   placement {
-    availability_zone = "us-west-2a"
+    availability_zone = "us-east-1a"
   }
 
-  ram_disk_id = "test"
-
-  vpc_security_group_ids = [aws_security_group.WebSG.id]
+  # vpc_security_group_ids = [aws_security_group.WebSG.id]
 
   tag_specifications {
     resource_type = "instance"
 
     tags = {
-      Name = "test"
+      Name = "server1a"
     }
   }
 
-   user_data = "${file("apache1.sh")}"
+  # user_data = data.cloudinit_config.cloudinit-example1.rendered
+  user_data = filebase64("${path.module}/script.sh")
 }

@@ -66,16 +66,16 @@ resource "aws_route_table" "Private_RT_2" {
 
 # Assoisate Public table to private subnet 1
 resource "aws_route_table_association" "private1_T" {
-  subnet_id     = aws_subnet.Private_Subnet1.id
-  route_table_id = aws_route_table.Public_RT.id
+  subnet_id      = aws_subnet.Private_Subnet1.id
+  route_table_id = aws_route_table.Private_RT_2.id
 }
 
 #------------------------------------------------#
 
 # Assoisate Public table to private subnet 2
 resource "aws_route_table_association" "private2_T" {
-  subnet_id     = aws_subnet.Private_Subnet2.id
-  route_table_id = aws_route_table.Public_RT.id
+  subnet_id      = aws_subnet.Private_Subnet2.id
+  route_table_id = aws_route_table.Private_RT_2.id
 }
 
 #------------------------------------------------#
